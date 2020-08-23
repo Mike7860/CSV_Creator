@@ -44,10 +44,8 @@ with open('all.csv', newline='') as csvfile:
     for row in all:
         #
         if row[0] == "Test ID" and row[1] == "Source" and row[2] == "Flag" and row[3] == "Automate":
-            print("ok")
             continue
         dict_test_all[row[0]] = Test(row[0],row[1],row[2],row[3])
-    print(dict_test_all)
 workbook_1 = openpyxl.load_workbook('not_test_1.xlsx', 'rb', data_only=True)
 not_test_1 =  workbook_1['not_tested']
 all_rows = not_test_1.max_row - 1
@@ -59,16 +57,15 @@ choise = input ()
 
 if choise == '1':
     for A2, B2, C2, D2 in nt1_range:
-        if str(B2.value) != "" and dict_test_all[B2.value].ID == str(B2.value):
+        if str(B2.value) != "0" and dict_test_all[B2.value].ID == str(B2.value):
             dict_test_all[B2.value].flag = "2"
-            print(dict_test_all[B2.value].flag)
             print("Not_testable: %s" %(dict_test_all[B2.value].ID))
             not_tested = not_tested + 1
     print("Not tested (based on first file)", not_tested)
 
 if choise == '2':
     for A2, B2, C2, D2 in nt1_range:
-        if str(C2.value) != "" and dict_test_all[C2.value].ID == str(C2.value):
+        if str(C2.value) != "0" and dict_test_all[C2.value].ID == str(C2.value):
             dict_test_all[C2.value].flag = "2"
             print("Not_testable: %s" %(dict_test_all[C2.value].ID))
             not_tested = not_tested + 1
@@ -89,7 +86,6 @@ for A2, B2, C2, D2 in nt2_range:
         print("Not_testable: %s" % (dict_test_all[A2.value].ID))
         not_tested = not_tested + 1
         continue
-print(not_tested)
 
 all_rows_3 = scope.max_row
 nt3 = "D" + str(all_rows_3)
@@ -100,3 +96,47 @@ for A2, B2, C2, D2 in nt3_range:
         dict_test_basic[A2.value] = Test(dict_test_all[A2.value].ID, dict_test_all[A2.value].source, dict_test_all[A2.value].flag, dict_test_all[A2.value].auto)
     if str(str(D2.value)) == "extended" and dict_test_all[A2.value].ID == str(A2.value):
         dict_test_extended[A2.value] = Test(dict_test_all[A2.value].ID, dict_test_all[A2.value].source, dict_test_all[A2.value].flag, dict_test_all[A2.value].auto)
+
+if choise == '1':
+    with open('final.csv', 'w') as csvfile:
+        fieldnames = ["Test ID", "Source", "Flag", "Automate"]
+        csv_write = csv.DictWriter(csvfile, fieldnames = fieldnames, delimiter = ',', lineterminator = '\n')
+        csv_write.writeheader()
+
+        for value in dict_test_basic.values():
+            csv_write.writerow({
+                "Test ID": value.ID,
+                "Source": value.source,
+                "Flag": value.flag,
+                "Automate": value.auto
+            })
+
+    for key, value in dict_test_basic.items():
+        Test_row = "key: %s | value: %s | %s | %s | %s" %(key, value.ID, value.source, value.flag, value.auto)
+        logging.basicConfig(filename=str(date)+" logs.log", filemode='w', level=logging.INFO)
+        logging.info(Test_row)
+
+    print("All not tested: ", not_tested)
+    print("All tests: ", len(dict_test_basic))
+
+if choise == '2':
+    with open('final_test_plan.csv', 'w') as csvfile:
+        fieldnames = ["Test ID", "Source", "Flag", "Automate"]
+        csv_write = csv.DictWriter(csvfile, fieldnames = fieldnames, delimiter = ',', lineterminator = '\n')
+        csv_write.writeheader()
+
+        for value in dict_test_extended.values():
+            csv_write.writerow({
+                "Test ID": value.ID,
+                "Source": value.source,
+                "Flag": value.flag,
+                "Automate": value.auto
+            })
+
+    for key, value in dict_test_extended.items():
+        Test_row = "key: %s | value: %s | %s | %s | %s" %(key, value.ID, value.source, value.flag, value.auto)
+        logging.basicConfig(filename=str(date)+" logs.log", filemode='w', level=logging.INFO)
+        logging.info(Test_row)
+
+    print("All not tested: ", not_tested)
+    print("All tests: ", len(dict_test_extended))
