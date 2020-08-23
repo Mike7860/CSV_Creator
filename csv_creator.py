@@ -61,6 +61,7 @@ if choise == '1':
     for A2, B2, C2, D2 in nt1_range:
         if str(B2.value) != "" and dict_test_all[B2.value].ID == str(B2.value):
             dict_test_all[B2.value].flag = "2"
+            print(dict_test_all[B2.value].flag)
             print("Not_testable: %s" %(dict_test_all[B2.value].ID))
             not_tested = not_tested + 1
     print("Not tested (based on first file)", not_tested)
@@ -72,3 +73,30 @@ if choise == '2':
             print("Not_testable: %s" %(dict_test_all[C2.value].ID))
             not_tested = not_tested + 1
     print("Not tested (based on first file)", not_tested)
+
+workbook_2 = openpyxl.load_workbook('not_test_2.xlsx', 'rb')
+tests =  workbook_2['tests']
+scope = workbook_2['scope']
+
+all_rows_2 = tests.max_row
+nt2 = "D" + str(all_rows_2)
+
+nt2_range = tests['A2':nt2]
+
+for A2, B2, C2, D2 in nt2_range:
+    if str(str(D2.value).lower()) == "false" and dict_test_all[A2.value].ID == str(A2.value):
+        dict_test_all[A2.value].flag = "2"
+        print("Not_testable: %s" % (dict_test_all[A2.value].ID))
+        not_tested = not_tested + 1
+        continue
+print(not_tested)
+
+all_rows_3 = scope.max_row
+nt3 = "D" + str(all_rows_3)
+
+nt3_range = scope['A2':nt3]
+for A2, B2, C2, D2 in nt3_range:
+    if str(str(D2.value)) == "basic" and dict_test_all[A2.value].ID == str(A2.value):
+        dict_test_basic[A2.value] = Test(dict_test_all[A2.value].ID, dict_test_all[A2.value].source, dict_test_all[A2.value].flag, dict_test_all[A2.value].auto)
+    if str(str(D2.value)) == "extended" and dict_test_all[A2.value].ID == str(A2.value):
+        dict_test_extended[A2.value] = Test(dict_test_all[A2.value].ID, dict_test_all[A2.value].source, dict_test_all[A2.value].flag, dict_test_all[A2.value].auto)
