@@ -1,0 +1,21 @@
+Test ID,Source,Flag,Automate
+test_1,main,1,no
+test_2,main,1,yes
+test_3,main,2,no
+test_4,main,1,yes
+test_5,main,1,yes
+test_6,main,1,yes
+test_7,main,2,yes
+test_8,main,1,yes
+test_9,main,1,yes
+test_10,main,1,no
+test_11,main,1,yes
+test_12,main,1,yes
+test_13,main,1,yes
+test_14,main,2,no
+test_15,main,1,yes
+test_16,main,2,yes
+test_17,main,1,yes
+test_18,main,1,no
+test_19,main,2,yes
+test_20,main,1,no
